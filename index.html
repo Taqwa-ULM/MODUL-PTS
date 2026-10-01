@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathLab 8 - Rumah Rumus & Simulasi Interaktif SMP Almazaya</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            500: '#4f46e5',
+                            600: '#4338ca',
+                            700: '#3730a3',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- KaTeX for Math Equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card-light {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text-gold {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pyramid-part {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .pyramid-part:hover {
+            filter: brightness(1.25);
+            transform: scale(1.02);
+        }
+
+        .pyramid-part.active {
+            filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.8));
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.5);
+            border-radius: 9999px;
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .animate-pulse-subtle {
+            animation: pulse-subtle 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 glass-card border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showView('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-atom text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-base sm:text-lg tracking-tight text-white flex items-center gap-2">
+                        MATH<span class="text-indigo-400">LAB</span> 8
+                        <span class="text-[10px] uppercase bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full font-semibold">Almazaya</span>
+                    </h1>
+                    <p class="text-[11px] text-slate-400 font-medium">Rumah Rumus & Visualisasi Interaktif Kelas 8</p>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Menu -->
+            <nav class="hidden md:flex items-center space-x-1">
+                <button onclick="showView('home')" id="nav-btn-home" class="nav-link px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-400 bg-indigo-500/10 border border-indigo-500/20">
+                    <i class="fa-solid fa-house mr-1.5"></i> Homepage
+                </button>
+                <button onclick="showView('bab1')" id="nav-btn-bab1" class="nav-link px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white hover:bg-slate-800/60">
+                    <i class="fa-solid fa-scale-balanced mr-1.5 text-sky-400"></i> Bab I: Perbandingan & Skala
+                </button>
+                <button onclick="showView('bab2')" id="nav-btn-bab2" class="nav-link px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white hover:bg-slate-800/60">
+                    <i class="fa-solid fa-diagram-project mr-1.5 text-purple-400"></i> Bab II: Relasi & Fungsi
+                </button>
+            </nav>
+
+            <!-- Quiz Link CTA -->
+            <a href="https://taqwa-ulm.github.io/PTS-AMZ-8/" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-lg shadow-amber-500/20 hover:scale-105 transition-all duration-200">
+                <i class="fa-solid fa-gamepad mr-2 text-sm"></i> Buka Kuis PTS
+                <i class="fa-solid fa-arrow-up-right-from-square ml-1.5 text-[10px]"></i>
+            </a>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 pt-2 border-t border-slate-800 space-y-2 bg-slate-900/95">
+            <button onclick="showView('home'); toggleMobileMenu()" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold text-slate-200 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-house w-6 text-indigo-400"></i> Homepage
+            </button>
+            <button onclick="showView('bab1'); toggleMobileMenu()" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold text-slate-200 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-scale-balanced w-6 text-sky-400"></i> Bab I: Perbandingan & Skala
+            </button>
+            <button onclick="showView('bab2'); toggleMobileMenu()" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold text-slate-200 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-diagram-project w-6 text-purple-400"></i> Bab II: Relasi & Fungsi
+            </button>
+            <a href="https://taqwa-ulm.github.io/PTS-AMZ-8/" target="_blank" class="block w-full text-center px-4 py-2.5 rounded-xl text-sm font-bold bg-amber-500 text-slate-950">
+                <i class="fa-solid fa-gamepad mr-2"></i> Kunjungi Kuis PTS Online
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- ==================== VIEW 1: HOMEPAGE ==================== -->
+        <section id="view-home" class="space-y-12 transition-all duration-300">
+            
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden p-8 sm:p-12 glass-card border border-indigo-500/20 shadow-2xl">
+                <!-- Background Glowing Orbs -->
+                <div class="absolute -top-24 -right-24 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-3xl space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
+                        <i class="fa-solid fa-graduation-cap text-yellow-400"></i>
+                        PTS Ganjil Matematika SMP Almazaya Banjarmasin
+                    </div>
+                    
+                    <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+                        Eksplorasi <span class="gradient-text">Rumus Interaktif</span> & Game Simulasi Matematika
+                    </h1>
+                    
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed font-normal">
+                        Pelajari konsep matematika bukan hanya dengan menghafal rumus, tetapi melalui visualisasi grafik hidup, kalkulator interaktif, serta game simulasi piramida skala!
+                    </p>
+
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="showView('bab1')" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-600 font-extrabold text-sm text-white shadow-lg shadow-indigo-500/30 hover:scale-105 transition-transform flex items-center">
+                            <i class="fa-solid fa-play mr-2"></i> Mulai Bab I: Perbandingan
+                        </button>
+                        <button onclick="showView('bab2')" class="px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-extrabold text-sm text-slate-200 transition-all flex items-center">
+                            <i class="fa-solid fa-cube mr-2 text-purple-400"></i> Bab II: Relasi & Fungsi
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Hub Card Section -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8 border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-slate-900 to-indigo-950 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+                <div class="space-y-2 text-center md:text-left z-10">
+                    <div class="inline-block px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 font-extrabold text-xs tracking-wider uppercase">
+                        <i class="fa-solid fa-trophy mr-1"></i> Uji Pemahamanmu
+                    </div>
+                    <h2 class="text-2xl font-black text-white">Siap Menghadapi Kuis PTS Matematika?</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 max-w-xl">
+                        Akses kuis interaktif 20 soal lengkap dengan pembahasan otomatis untuk menguji pemahaman perbandingan, skala, relasi, dan fungsi.
+                    </p>
+                </div>
+                <div class="z-10 w-full md:w-auto">
+                    <a href="https://taqwa-ulm.github.io/PTS-AMZ-8/" target="_blank" rel="noopener noreferrer" class="block text-center px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 hover:scale-105 transition-all">
+                        <i class="fa-solid fa-external-link mr-2"></i> BUKA SOAL KUIS ONLINE
+                    </a>
+                </div>
+            </div>
+
+            <!-- Chapter Navigation Grid -->
+            <div>
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                    <i class="fa-solid fa-layer-group text-indigo-400 mr-2.5"></i> Pilih Modul Interaktif
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Card BAB I -->
+                    <div onclick="showView('bab1')" class="glass-card p-6 rounded-3xl border border-sky-500/20 hover:border-sky-500/50 transition-all duration-300 cursor-pointer group hover:-translate-y-1">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-scale-balanced text-2xl"></i>
+                            </div>
+                            <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-sky-500/20 text-sky-300">BAB I</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white group-hover:text-sky-300 transition-colors mb-2">
+                            Perbandingan & Skala
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            Pahami perbedaan perbandingan senilai vs berbalik nilai dengan grafik langsung, serta rasakan keseruan **Game Simulasi Piramida Skala (JP, JB, S)**.
+                        </p>
+                        <div class="flex flex-wrap gap-2 text-[11px] text-slate-300 font-semibold">
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700">Perbandingan Senilai</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700">Berbalik Nilai</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30"><i class="fa-solid fa-gamepad mr-1"></i> Game Piramida</span>
+                        </div>
+                    </div>
+
+                    <!-- Card BAB II -->
+                    <div onclick="showView('bab2')" class="glass-card p-6 rounded-3xl border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 cursor-pointer group hover:-translate-y-1">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-diagram-project text-2xl"></i>
+                            </div>
+                            <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-purple-500/20 text-purple-300">BAB II</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white group-hover:text-purple-300 transition-colors mb-2">
+                            Relasi & Fungsi
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            Eksplorasi rumus pemetaan $n(B)^{n(A)}$, korespondensi 1-1 ($n!$), Mesin Evaluator fungsi $f(x)=ax+b$, serta Dekoder Sandi Angka Cryptography.
+                        </p>
+                        <div class="flex flex-wrap gap-2 text-[11px] text-slate-300 font-semibold">
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700">Domain & Range</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700">Mesin Evaluator f(x)</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-500/30"><i class="fa-solid fa-key mr-1"></i> Sandi Angka</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Features Highlights Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+                <div class="glass-card p-4 rounded-2xl border border-slate-800 flex items-center space-x-3">
+                    <div class="p-3 rounded-xl bg-indigo-500/20 text-indigo-400">
+                        <i class="fa-solid fa-chart-line text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-white">Grafik Canvas Realtime</div>
+                        <div class="text-[11px] text-slate-400">Visualisasi rasio & kurva $f(x)$</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-2xl border border-slate-800 flex items-center space-x-3">
+                    <div class="p-3 rounded-xl bg-emerald-500/20 text-emerald-400">
+                        <i class="fa-solid fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-white">Kalkulator Pemetaan</div>
+                        <div class="text-[11px] text-slate-400">Hitung $n!$ & $n(B)^{n(A)}$ cepat</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-2xl border border-slate-800 flex items-center space-x-3">
+                    <div class="p-3 rounded-xl bg-amber-500/20 text-amber-400">
+                        <i class="fa-solid fa-puzzle-piece text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-white">Simulasi Piramida</div>
+                        <div class="text-[11px] text-slate-400">Game interaktif JP, JB, Skala</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ==================== VIEW 2: BAB I (PERBANDINGAN & SKALA) ==================== -->
+        <section id="view-bab1" class="hidden space-y-8 transition-all duration-300">
+            
+            <!-- Header Bab I -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 text-xs font-bold mb-2">
+                        <i class="fa-solid fa-scale-balanced"></i> Modul Matematika Kelas 8
+                    </div>
+                    <h2 class="text-3xl font-black text-white">BAB I: Perbandingan & Skala</h2>
+                    <p class="text-slate-400 text-xs sm:text-sm">Eksplorasi rumus perbandingan senilai, berbalik nilai, dan game simulasi piramida skala.</p>
+                </div>
+
+                <!-- Inner Navigation Tabs -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchBab1Tab('senilai')" id="tab-b1-senilai" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-sky-500 text-slate-950 shadow-md">
+                        <i class="fa-solid fa-arrow-trend-up mr-1"></i> Perbandingan Senilai
+                    </button>
+                    <button onclick="switchBab1Tab('berbalik')" id="tab-b1-berbalik" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        <i class="fa-solid fa-arrow-trend-down mr-1"></i> Berbalik Nilai
+                    </button>
+                    <button onclick="switchBab1Tab('skala')" id="tab-b1-skala" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/30">
+                        <i class="fa-solid fa-shapes mr-1"></i> Game Piramida Skala
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUB-TAB 1: PERBANDINGAN SENILAI -->
+            <div id="subtab-senilai" class="space-y-6">
+                
+                <!-- Explanation Card -->
+                <div class="glass-card p-6 rounded-3xl border border-sky-500/30 bg-gradient-to-br from-slate-900 to-sky-950/40">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                        <div class="lg:col-span-2 space-y-3">
+                            <h3 class="text-xl font-extrabold text-sky-400 flex items-center">
+                                <i class="fa-solid fa-lightbulb mr-2"></i> Pengertian Perbandingan Senilai
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                Perbandingan senilai adalah hubungan antara dua variabel di mana jika nilai variabel pertama <span class="text-sky-300 font-bold">bertambah</span>, maka nilai variabel kedua juga akan <span class="text-sky-300 font-bold">bertambah secara sebanding</span> (berbanding lurus).
+                            </p>
+                            <div class="bg-slate-950/60 p-4 rounded-2xl border border-sky-500/20 font-mono text-center text-sky-200 text-sm">
+                                $$\frac{a_1}{a_2} = \frac{b_1}{b_2} \iff a_1 \cdot b_2 = a_2 \cdot b_1 \quad \text{atau} \quad y = k \cdot x$$
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+                            <div class="font-bold text-slate-200 border-b border-slate-800 pb-1.5"><i class="fa-solid fa-list-check text-sky-400 mr-1"></i> Contoh Nyata:</div>
+                            <ul class="space-y-1.5 text-slate-400">
+                                <li class="flex items-center"><i class="fa-solid fa-gas-pump text-sky-400 w-5"></i> Bensin (Liter) vs Jarak Tempuh (km)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-pen text-sky-400 w-5"></i> Jumlah Barang vs Total Harga</li>
+                                <li class="flex items-center"><i class="fa-solid fa-hammer text-sky-400 w-5"></i> Waktu Kerja vs Kerajinan Dihasilkan</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Lab Simulator & Graph -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Controls Panel -->
+                    <div class="lg:col-span-5 glass-card p-6 rounded-3xl border border-slate-800 space-y-5">
+                        <h4 class="font-bold text-white text-sm flex items-center justify-between">
+                            <span><i class="fa-solid fa-sliders text-sky-400 mr-2"></i> Lab Kalkulator Senilai</span>
+                            <span class="text-[10px] text-slate-400">Ubah nilai di bawah</span>
+                        </h4>
+
+                        <div class="space-y-4 text-xs">
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Pilihan Kasus Real-World:</label>
+                                <select id="senilai-case" onchange="updateSenilaiSim()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:border-sky-500 outline-none">
+                                    <option value="bensin">Bensin (Liter) $\rightarrow$ Jarak (km)</option>
+                                    <option value="pulpen">Jumlah Barang $\rightarrow$ Total Harga (Rp)</option>
+                                    <option value="kerajinan">Waktu (Hari) $\rightarrow$ Hasil Kerajinan</option>
+                                </select>
+                            </div>
+
+                            <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 space-y-3">
+                                <div class="font-bold text-sky-400">Kondisi Awal (Tahu):</div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 block" id="senilai-label-x1">Variabel X1</label>
+                                        <input type="number" id="senilai-x1" value="4" oninput="updateSenilaiSim()" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-center font-bold">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 block" id="senilai-label-y1">Variabel Y1</label>
+                                        <input type="number" id="senilai-y1" value="52" oninput="updateSenilaiSim()" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-center font-bold">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 space-y-3">
+                                <div class="font-bold text-emerald-400">Kondisi Target (Dihitung):</div>
+                                <div>
+                                    <div class="flex justify-between text-[11px] font-semibold mb-1">
+                                        <span id="senilai-label-x2" class="text-slate-300">Variabel X2</span>
+                                        <span id="senilai-val-x2" class="text-emerald-400 font-bold">10</span>
+                                    </div>
+                                    <input type="range" id="senilai-slider-x2" min="1" max="50" value="10" oninput="updateSenilaiSim()" class="w-full accent-emerald-500 cursor-pointer">
+                                </div>
+                            </div>
+
+                            <!-- Result Box -->
+                            <div class="p-4 rounded-2xl bg-gradient-to-r from-sky-500/20 to-indigo-500/20 border border-sky-500/30 text-center space-y-1">
+                                <div class="text-[10px] uppercase font-bold text-sky-300">Hasil Variabel Target Y2</div>
+                                <div id="senilai-result-y2" class="text-2xl font-black text-white">130</div>
+                                <div id="senilai-k-value" class="text-[11px] text-slate-400 font-mono">Konstanta Rasio (k) = 13</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Interactive Graph -->
+                    <div class="lg:col-span-7 glass-card p-6 rounded-3xl border border-slate-800 flex flex-col justify-between space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white text-sm flex items-center">
+                                <i class="fa-solid fa-chart-line text-sky-400 mr-2"></i> Visualisasi Grafik Garis Lurus (Senilai)
+                            </h4>
+                            <span class="text-[10px] px-2 py-1 rounded bg-sky-500/20 text-sky-300 font-mono">Linear: y = k · x</span>
+                        </div>
+
+                        <div class="relative w-full h-64 sm:h-80 bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden p-2">
+                            <canvas id="canvas-senilai" class="w-full h-full block"></canvas>
+                        </div>
+
+                        <div class="text-xs text-slate-400 bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span><i class="fa-solid fa-circle-info text-sky-400 mr-1.5"></i> Karakteristik Grafik:</span>
+                            <span class="font-semibold text-slate-200">Garis Lurus Melalui Titik Pusat (0,0)</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SUB-TAB 2: PERBANDINGAN BERBALIK NILAI -->
+            <div id="subtab-berbalik" class="hidden space-y-6">
+                
+                <!-- Explanation Card -->
+                <div class="glass-card p-6 rounded-3xl border border-purple-500/30 bg-gradient-to-br from-slate-900 to-purple-950/40">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                        <div class="lg:col-span-2 space-y-3">
+                            <h3 class="text-xl font-extrabold text-purple-400 flex items-center">
+                                <i class="fa-solid fa-lightbulb mr-2"></i> Pengertian Perbandingan Berbalik Nilai
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                Perbandingan berbalik nilai adalah hubungan antara dua variabel di mana jika variabel pertama <span class="text-purple-300 font-bold">bertambah</span>, maka variabel kedua akan <span class="text-rose-400 font-bold">berkurang secara proporsional</span> sehingga hasil kalinya selalu konstan ($k$).
+                            </p>
+                            <div class="bg-slate-950/60 p-4 rounded-2xl border border-purple-500/20 font-mono text-center text-purple-200 text-sm">
+                                $$a_1 \cdot b_1 = a_2 \cdot b_2 = k \quad \text{atau} \quad y = \frac{k}{x}$$
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+                            <div class="font-bold text-slate-200 border-b border-slate-800 pb-1.5"><i class="fa-solid fa-list-check text-purple-400 mr-1"></i> Contoh Nyata:</div>
+                            <ul class="space-y-1.5 text-slate-400">
+                                <li class="flex items-center"><i class="fa-solid fa-users text-purple-400 w-5"></i> Jumlah Pekerja vs Waktu Selesai (Hari)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-wheat-awn text-purple-400 w-5"></i> Jumlah Hewan Ternak vs Hari Habis Pakan</li>
+                                <li class="flex items-center"><i class="fa-solid fa-gauge-high text-purple-400 w-5"></i> Kecepatan Kendaraan vs Waktu Tempuh</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Lab Simulator & Graph Inverse -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Controls Panel -->
+                    <div class="lg:col-span-5 glass-card p-6 rounded-3xl border border-slate-800 space-y-5">
+                        <h4 class="font-bold text-white text-sm flex items-center justify-between">
+                            <span><i class="fa-solid fa-sliders text-purple-400 mr-2"></i> Lab Kalkulator Berbalik Nilai</span>
+                            <span class="text-[10px] text-slate-400">Ubah nilai di bawah</span>
+                        </h4>
+
+                        <div class="space-y-4 text-xs">
+                            <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 space-y-3">
+                                <div class="font-bold text-purple-400">Kondisi Awal Pekerjaan:</div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 block">Pekerja Awal ($x_1$)</label>
+                                        <input type="number" id="berbalik-x1" value="18" oninput="updateBerbalikSim()" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-center font-bold">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 block">Waktu Awal ($y_1$ hari)</label>
+                                        <input type="number" id="berbalik-y1" value="16" oninput="updateBerbalikSim()" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-center font-bold">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 space-y-3">
+                                <div class="font-bold text-amber-400">Target Waktu Baru ($y_2$):</div>
+                                <div>
+                                    <div class="flex justify-between text-[11px] font-semibold mb-1">
+                                        <span class="text-slate-300">Waktu yang diinginkan (Hari)</span>
+                                        <span id="berbalik-val-y2" class="text-amber-400 font-bold">12</span>
+                                    </div>
+                                    <input type="range" id="berbalik-slider-y2" min="2" max="32" value="12" oninput="updateBerbalikSim()" class="w-full accent-amber-500 cursor-pointer">
+                                </div>
+                            </div>
+
+                            <!-- Result Box -->
+                            <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-center space-y-1">
+                                <div class="text-[10px] uppercase font-bold text-purple-300">Pekerja Dibutuhkan ($x_2$)</div>
+                                <div id="berbalik-result-x2" class="text-2xl font-black text-white">24 Orang</div>
+                                <div id="berbalik-k-value" class="text-[11px] text-slate-400 font-mono">Beban Kerja Total (k) = 288 Man-Days</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Interactive Graph Inverse -->
+                    <div class="lg:col-span-7 glass-card p-6 rounded-3xl border border-slate-800 flex flex-col justify-between space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white text-sm flex items-center">
+                                <i class="fa-solid fa-chart-line text-purple-400 mr-2"></i> Visualisasi Kurva Hiperbola (Berbalik Nilai)
+                            </h4>
+                            <span class="text-[10px] px-2 py-1 rounded bg-purple-500/20 text-purple-300 font-mono">Hyperbola: y = k / x</span>
+                        </div>
+
+                        <div class="relative w-full h-64 sm:h-80 bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden p-2">
+                            <canvas id="canvas-berbalik" class="w-full h-full block"></canvas>
+                        </div>
+
+                        <div class="text-xs text-slate-400 bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span><i class="fa-solid fa-circle-info text-purple-400 mr-1.5"></i> Karakteristik Grafik:</span>
+                            <span class="font-semibold text-slate-200">Kurva Melengkung Melandai (Tidak Pernah Menyentuh Nol)</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SUB-TAB 3: GAME SIMULASI PIRAMIDA SKALA -->
+            <div id="subtab-skala" class="hidden space-y-8">
+                
+                <!-- Game Header Banner -->
+                <div class="glass-card p-6 rounded-3xl border border-amber-500/40 bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-950/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="space-y-1 text-center sm:text-left">
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold">
+                            <i class="fa-solid fa-gamepad"></i> Game & Lab Simulasi Piramida
+                        </div>
+                        <h3 class="text-2xl font-black text-white">Segitiga Rumus Piramida Skala</h3>
+                        <p class="text-xs text-slate-300">Klik bagian piramida yang ingin dicari, lalu selesaikan tantangan skornya!</p>
+                    </div>
+
+                    <div class="flex items-center space-x-3 bg-slate-950/80 px-4 py-2.5 rounded-2xl border border-amber-500/30">
+                        <div class="text-center">
+                            <div class="text-[10px] text-slate-400 font-bold uppercase">Skor Game</div>
+                            <div id="skala-game-score" class="text-xl font-black text-amber-400">0</div>
+                        </div>
+                        <div class="h-8 w-px bg-slate-800"></div>
+                        <div class="text-center">
+                            <div class="text-[10px] text-slate-400 font-bold uppercase">Streak</div>
+                            <div id="skala-game-streak" class="text-xl font-black text-emerald-400">0 🔥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Pyramid SVG Interactive Component -->
+                    <div class="lg:col-span-6 glass-card p-6 sm:p-8 rounded-3xl border border-slate-800 flex flex-col items-center justify-center space-y-6">
+                        <div class="text-xs font-bold text-slate-400 text-center">
+                            <i class="fa-solid fa-hand-pointer mr-1 text-amber-400"></i> Klik salah satu area Piramida untuk memilih Rumus:
+                        </div>
+
+                        <!-- Interactive SVG Pyramid -->
+                        <div class="relative w-72 h-64 sm:w-80 sm:h-72">
+                            <svg viewBox="0 0 300 260" class="w-full h-full drop-shadow-2xl">
+                                <!-- Top Triangle: JP (Jarak pada Peta) -->
+                                <polygon id="pyr-jp" points="150,10 40,120 260,120" 
+                                    class="pyramid-part fill-amber-500/80 stroke-amber-300 stroke-2 hover:fill-amber-400 transition-all"
+                                    onclick="selectPyramidTarget('JP')" />
+                                <text x="150" y="80" text-anchor="middle" fill="#0f172a" font-weight="900" font-size="24" pointer-events="none">JP</text>
+                                <text x="150" y="100" text-anchor="middle" fill="#0f172a" font-weight="700" font-size="10" pointer-events="none">(Jarak Peta)</text>
+
+                                <!-- Division Line -->
+                                <line x1="30" y1="125" x2="270" y2="125" stroke="#f59e0b" stroke-width="4" stroke-dasharray="4" />
+
+                                <!-- Bottom Left: S (Skala) -->
+                                <polygon id="pyr-s" points="35,130 145,130 145,240 5,240" 
+                                    class="pyramid-part fill-sky-500/80 stroke-sky-300 stroke-2 hover:fill-sky-400 transition-all"
+                                    onclick="selectPyramidTarget('S')" />
+                                <text x="80" y="180" text-anchor="middle" fill="#ffffff" font-weight="900" font-size="22" pointer-events="none">S</text>
+                                <text x="80" y="200" text-anchor="middle" fill="#e0f2fe" font-weight="700" font-size="10" pointer-events="none">(Skala)</text>
+
+                                <!-- Multiplication Symbol in Center -->
+                                <circle cx="150" cy="185" r="14" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="150" y="191" text-anchor="middle" fill="#f59e0b" font-weight="900" font-size="16" pointer-events="none">×</text>
+
+                                <!-- Bottom Right: JB (Jarak Sebenarnya) -->
+                                <polygon id="pyr-jb" points="155,130 265,130 295,240 155,240" 
+                                    class="pyramid-part fill-emerald-500/80 stroke-emerald-300 stroke-2 hover:fill-emerald-400 transition-all"
+                                    onclick="selectPyramidTarget('JB')" />
+                                <text x="220" y="180" text-anchor="middle" fill="#ffffff" font-weight="900" font-size="22" pointer-events="none">JB</text>
+                                <text x="220" y="200" text-anchor="middle" fill="#d1fae5" font-weight="700" font-size="10" pointer-events="none">(Jarak Sebenarnya)</text>
+                            </svg>
+                        </div>
+
+                        <!-- Active Formula Formula Display Card -->
+                        <div id="skala-formula-box" class="w-full bg-slate-950 p-4 rounded-2xl border border-amber-500/30 text-center space-y-1">
+                            <div class="text-[10px] uppercase tracking-wider text-amber-400 font-bold">Rumus Terpilih</div>
+                            <div id="skala-formula-text" class="text-base sm:text-lg font-mono font-bold text-white">
+                                $$\text{JP} = \text{S} \times \text{JB}$$
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Challenge & Simulation Panel -->
+                    <div class="lg:col-span-6 space-y-6">
+                        
+                        <!-- Mode Selector: Kalkulator vs Challenge Game -->
+                        <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-5">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                <h4 class="font-bold text-white text-sm flex items-center">
+                                    <i class="fa-solid fa-calculator text-amber-400 mr-2"></i> Lab Simulasi & Tantangan
+                                </h4>
+                                <button onclick="generateSkalaQuestion()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs transition-all">
+                                    <i class="fa-solid fa-dice mr-1"></i> Soal Acak Baru
+                                </button>
+                            </div>
+
+                            <!-- Game Question Prompt -->
+                            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-amber-400 font-bold" id="skala-target-badge">Mencari: JP (Jarak Peta)</span>
+                                    <span class="text-slate-400" id="skala-unit-hint">Satuan Hasil: cm</span>
+                                </div>
+                                <div id="skala-question-text" class="text-xs sm:text-sm text-slate-200 font-medium leading-relaxed">
+                                    Diketahui Skala peta adalah <strong>1 : 1.500.000</strong> dan Jarak Sebenarnya (JB) adalah <strong>90 km</strong>. Berapakah Jarak pada Peta (JP)?
+                                </div>
+                            </div>
+
+                            <!-- Input Answers Form -->
+                            <div class="space-y-4 text-xs">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div id="input-group-1">
+                                        <label class="block text-slate-400 mb-1" id="label-param-1">Skala (1 : N)</label>
+                                        <input type="number" id="val-param-1" value="1500000" oninput="calculateSkalaLive()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-mono font-bold">
+                                    </div>
+                                    <div id="input-group-2">
+                                        <label class="block text-slate-400 mb-1" id="label-param-2">Jarak Sebenarnya (km)</label>
+                                        <input type="number" id="val-param-2" value="90" oninput="calculateSkalaLive()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-mono font-bold">
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-900 p-4 rounded-2xl border border-amber-500/30 space-y-2">
+                                    <label class="block text-amber-300 font-bold text-xs">Tebak / Masukkan Jawabanmu:</label>
+                                    <div class="flex space-x-2">
+                                        <input type="number" step="0.1" id="user-skala-input" placeholder="Masukkan angka..." class="flex-grow bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold text-sm">
+                                        <button onclick="checkSkalaAnswer()" class="px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black rounded-xl text-xs hover:scale-105 transition-all">
+                                            CEK JAWABAN
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Live Feedback Box -->
+                                <div id="skala-feedback-box" class="hidden p-3.5 rounded-xl text-xs font-bold text-center"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==================== VIEW 3: BAB II (RELASI DAN FUNGSI) ==================== -->
+        <section id="view-bab2" class="hidden space-y-8 transition-all duration-300">
+            
+            <!-- Header Bab II -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-xs font-bold mb-2">
+                        <i class="fa-solid fa-diagram-project"></i> Modul Matematika Kelas 8
+                    </div>
+                    <h2 class="text-3xl font-black text-white">BAB II: Relasi & Fungsi</h2>
+                    <p class="text-slate-400 text-xs sm:text-sm">Eksplorasi konsep pemetaan, korespondensi 1-1, mesin fungsi $f(x)$, dan dekoder sandi angka.</p>
+                </div>
+
+                <!-- Inner Navigation Tabs -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchBab2Tab('konsep')" id="tab-b2-konsep" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-purple-600 text-white shadow-md">
+                        <i class="fa-solid fa-book-open mr-1"></i> Pengertian & Pemetaan
+                    </button>
+                    <button onclick="switchBab2Tab('mesin')" id="tab-b2-mesin" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        <i class="fa-solid fa-gear mr-1"></i> Mesin Evaluator f(x)
+                    </button>
+                    <button onclick="switchBab2Tab('sandi')" id="tab-b2-sandi" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/30">
+                        <i class="fa-solid fa-key mr-1"></i> Sandi Angka
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUB-TAB 1: KONSEP RELASI & PEMETAAN -->
+            <div id="subtab-konsep" class="space-y-6">
+                
+                <!-- Definition Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-2">
+                        <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">
+                            1
+                        </div>
+                        <h4 class="font-bold text-white text-base">Relasi</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Aturan yang menghubungkan anggota himpunan domain $A$ ke anggota himpunan kodomain $B$. Anggota domain boleh punya pasangan lebih dari satu atau tidak sama sekali.
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-3xl border border-purple-500/30 bg-purple-950/20 space-y-2">
+                        <div class="w-9 h-9 rounded-xl bg-purple-500 text-slate-950 flex items-center justify-center font-extrabold text-sm">
+                            2
+                        </div>
+                        <h4 class="font-bold text-purple-300 text-base">Fungsi (Pemetaan)</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Relasi khusus di mana <span class="text-amber-400 font-bold">SETIAP</span> anggota domain $A$ dipasangkan <span class="text-amber-400 font-bold">TEPAT SATU</span> ke anggota kodomain $B$. Domain tidak boleh bercabang atau kosong.
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-2">
+                        <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-sm">
+                            3
+                        </div>
+                        <h4 class="font-bold text-white text-base">Korespondensi 1-1</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Fungsi di mana $n(A) = n(B)$, dan setiap anggota $A$ berpasangan tepat satu dengan $B$, serta setiap $B$ berpasangan tepat satu dengan $A$.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Interactive Mapping Formula Calculator -->
+                <div class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+                    <h3 class="text-lg font-bold text-white flex items-center">
+                        <i class="fa-solid fa-calculator text-purple-400 mr-2"></i> Kalkulator Rumus Pemetaan & Korespondensi 1-1
+                    </h3>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                        
+                        <!-- Inputs -->
+                        <div class="lg:col-span-5 space-y-4 bg-slate-950 p-5 rounded-2xl border border-slate-800 text-xs">
+                            <div class="font-bold text-slate-200 border-b border-slate-800 pb-2">Tentukan Jumlah Anggota Himpunan:</div>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between font-semibold mb-1">
+                                        <span class="text-purple-300">Banyak Anggota Himpunan A $\implies n(A)$</span>
+                                        <span id="val-na-display" class="text-white font-bold">4</span>
+                                    </div>
+                                    <input type="range" id="input-na" min="1" max="6" value="4" oninput="updateMappingCalculator()" class="w-full accent-purple-500 cursor-pointer">
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between font-semibold mb-1">
+                                        <span class="text-indigo-300">Banyak Anggota Himpunan B $\implies n(B)$</span>
+                                        <span id="val-nb-display" class="text-white font-bold">2</span>
+                                    </div>
+                                    <input type="range" id="input-nb" min="1" max="6" value="2" oninput="updateMappingCalculator()" class="w-full accent-indigo-500 cursor-pointer">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results -->
+                        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            
+                            <!-- Formula 1: Pemetaan A to B -->
+                            <div class="bg-slate-900 p-5 rounded-2xl border border-purple-500/30 space-y-2">
+                                <div class="text-[11px] font-bold text-purple-400 uppercase">Banyak Pemetaan $A \rightarrow B$</div>
+                                <div class="text-xs font-mono text-slate-400">Rumus: $n(B)^{n(A)}$</div>
+                                <div id="calc-pemetaan-a-b" class="text-2xl font-black text-white">$2^4 = 16$</div>
+                                <p class="text-[10px] text-slate-400">Total fungsi unik yang dapat dibuat dari A ke B.</p>
+                            </div>
+
+                            <!-- Formula 2: Pemetaan B to A -->
+                            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-2">
+                                <div class="text-[11px] font-bold text-indigo-400 uppercase">Banyak Pemetaan $B \rightarrow A$</div>
+                                <div class="text-xs font-mono text-slate-400">Rumus: $n(A)^{n(B)}$</div>
+                                <div id="calc-pemetaan-b-a" class="text-2xl font-black text-white">$4^2 = 16$</div>
+                                <p class="text-[10px] text-slate-400">Total fungsi unik yang dapat dibuat dari B ke A.</p>
+                            </div>
+
+                            <!-- Formula 3: Korespondensi 1-1 -->
+                            <div class="sm:col-span-2 bg-gradient-to-r from-purple-900/30 to-indigo-900/30 p-5 rounded-2xl border border-amber-500/30 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-[11px] font-bold text-amber-400 uppercase">Banyak Korespondensi Satu-Satu</div>
+                                    <span id="kor-status-badge" class="text-[10px] px-2 py-0.5 rounded font-bold bg-rose-500/20 text-rose-300">Tidak Memenuhi ($n(A) \ne n(B)$)</span>
+                                </div>
+                                <div class="text-xs font-mono text-slate-400">Rumus Faktorial: $n! = n \times (n-1) \times \dots \times 1$</div>
+                                <div id="calc-korespondensi" class="text-2xl font-black text-amber-300">0 Pasangan</div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SUB-TAB 2: MESIN EVALUATOR FUNGSI f(x) = ax + b -->
+            <div id="subtab-mesin" class="hidden space-y-6">
+                
+                <div class="glass-card p-6 rounded-3xl border border-purple-500/30 bg-gradient-to-br from-slate-900 to-purple-950/40">
+                    <h3 class="text-xl font-extrabold text-purple-300 flex items-center mb-2">
+                        <i class="fa-solid fa-gears mr-2"></i> Lab Simulasi Mesin Fungsi $f(x) = ax + b$
+                    </h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Fungsi bekerja seperti mesin pengolah: Masukkan nilai domain ($x$), operasikan dengan rumus $f(x) = ax + b$, lalu dapatkan nilai bayangan/range ($y$).
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Function Controls -->
+                    <div class="lg:col-span-5 glass-card p-6 rounded-3xl border border-slate-800 space-y-5">
+                        <h4 class="font-bold text-white text-sm">
+                            <i class="fa-solid fa-sliders text-purple-400 mr-2"></i> Atur Rumus Fungsi:
+                        </h4>
+
+                        <div class="space-y-4 text-xs">
+                            <div class="grid grid-cols-2 gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Nilai $a$ (Gradien)</label>
+                                    <input type="number" id="func-param-a" value="5" oninput="updateFunctionMachine()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-white font-bold text-center">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Nilai $b$ (Konstanta)</label>
+                                    <input type="number" id="func-param-b" value="-7" oninput="updateFunctionMachine()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-white font-bold text-center">
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                                <div class="font-bold text-purple-400">Uji Masukkan Nilai $x$ (Domain):</div>
+                                <div>
+                                    <div class="flex justify-between font-semibold mb-1">
+                                        <span class="text-slate-300">Nilai Input $x$</span>
+                                        <span id="func-x-display" class="text-purple-300 font-bold">5</span>
+                                    </div>
+                                    <input type="range" id="func-input-x" min="-10" max="10" value="5" oninput="updateFunctionMachine()" class="w-full accent-purple-500 cursor-pointer">
+                                </div>
+                            </div>
+
+                            <!-- Result Machine Output -->
+                            <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-600/30 to-indigo-600/30 border border-purple-500/40 text-center space-y-1">
+                                <div class="text-[10px] uppercase font-bold text-purple-300">Hasil Output Bayangan $f(x)$</div>
+                                <div id="func-result-y" class="text-3xl font-black text-white">18</div>
+                                <div id="func-equation-display" class="text-xs font-mono text-purple-200">f(5) = 5(5) - 7 = 18</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Interactive Graph & Table -->
+                    <div class="lg:col-span-7 glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white text-sm">
+                                <i class="fa-solid fa-table text-purple-400 mr-2"></i> Tabel Pasangan Nilai $(x, y)$
+                            </h4>
+                            <span id="func-equation-title" class="text-xs font-mono text-purple-300 font-bold">f(x) = 5x - 7</span>
+                        </div>
+
+                        <!-- Values Table -->
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-center text-xs border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-900 text-purple-300 font-bold border-b border-slate-800">
+                                        <td class="p-2 border-r border-slate-800">x (Domain)</td>
+                                        <td class="p-2">-2</td>
+                                        <td class="p-2">-1</td>
+                                        <td class="p-2">0</td>
+                                        <td class="p-2">1</td>
+                                        <td class="p-2">2</td>
+                                        <td class="p-2 font-bold text-amber-400" id="tbl-current-x">5</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-slate-950 font-mono text-white">
+                                        <td class="p-2 border-r border-slate-800 font-bold text-purple-400">f(x) (Range)</td>
+                                        <td class="p-2" id="tbl-y-m2">-17</td>
+                                        <td class="p-2" id="tbl-y-m1">-12</td>
+                                        <td class="p-2" id="tbl-y-0">-7</td>
+                                        <td class="p-2" id="tbl-y-1">-2</td>
+                                        <td class="p-2" id="tbl-y-2">3</td>
+                                        <td class="p-2 font-bold text-amber-400" id="tbl-current-y">18</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="relative w-full h-56 bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden p-2">
+                            <canvas id="canvas-function" class="w-full h-full block"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SUB-TAB 3: SANDI ANGKA CRYPTOGRAPHY -->
+            <div id="subtab-sandi" class="hidden space-y-6">
+                
+                <div class="glass-card p-6 rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-slate-900 to-indigo-950/40 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-extrabold text-indigo-300 flex items-center">
+                            <i class="fa-solid fa-key mr-2"></i> Aplikasi Sandi Angka (Relasi Alfabet)
+                        </h3>
+                        <span class="text-xs px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 font-mono">Soal No. 13 & 14</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Sandi angka menggunakan prinsip relasi pemetaan korespondensi 1-1 antara himpunan huruf abjad $A=\{A, B, \dots, Z\}$ ke himpunan bilangan $B=\{1, 2, \dots, 26\}$.
+                    </p>
+                </div>
+
+                <!-- Alphabet Reference Grid -->
+                <div class="glass-card p-5 rounded-3xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-300 mb-3"><i class="fa-solid fa-table-cells mr-1.5 text-indigo-400"></i> Tabel Pasangan Sandi:</div>
+                    <div id="alphabet-grid" class="grid grid-cols-6 sm:grid-cols-13 gap-1.5 text-center text-[11px] font-mono">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Interactive Text Encoder / Decoder -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Text to Code -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                        <h4 class="font-bold text-white text-sm flex items-center">
+                            <i class="fa-solid fa-arrow-right-to-bracket text-indigo-400 mr-2"></i> Teks ke Kode Angka
+                        </h4>
+                        <div class="space-y-3 text-xs">
+                            <input type="text" id="cipher-input-text" value="MATEMATIKA" oninput="encodeCipher()" placeholder="Ketik kata (misal: FUNGSI)..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white font-bold uppercase tracking-wider">
+                            <div class="p-4 rounded-2xl bg-slate-950 border border-indigo-500/30 space-y-1">
+                                <div class="text-[10px] text-slate-400 uppercase font-bold">Hasil Kode Angka:</div>
+                                <div id="cipher-result-code" class="text-lg font-mono font-bold text-indigo-300 break-all">13-1-20-5-13-1-20-9-11</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code to Text -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+                        <h4 class="font-bold text-white text-sm flex items-center">
+                            <i class="fa-solid fa-arrow-left-long text-emerald-400 mr-2"></i> Kode Angka ke Teks
+                        </h4>
+                        <div class="space-y-3 text-xs">
+                            <input type="text" id="cipher-input-code" value="6-21-14-7-19-9" oninput="decodeCipher()" placeholder="Ketik angka dipisah tanda strip (-)..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white font-bold font-mono">
+                            <div class="p-4 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-1">
+                                <div class="text-[10px] text-slate-400 uppercase font-bold">Hasil Kata Terjemahan:</div>
+                                <div id="cipher-result-text" class="text-lg font-bold text-emerald-300 tracking-widest uppercase">FUNGSI</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950/80 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-graduation-cap text-indigo-400"></i>
+                <span class="font-semibold text-slate-400">SMP Almazaya Banjarmasin</span>
+                <span>• PTS Matematika Kelas 8</span>
+            </div>
+            <div class="text-slate-600">
+                Aplikasi Lab Rumus & Game Simulasi Interaktif
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sound FX using Web Audio API
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                } else if (type === 'success') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.25);
+                }
+            } catch(e) {}
+        }
+
+        // Navigation View Handler
+        function showView(viewId) {
+            playSound('click');
+            ['home', 'bab1', 'bab2'].forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                const btn = document.getElementById(`nav-btn-${v}`);
+                if (v === viewId) {
+                    el.classList.remove('hidden');
+                    if (btn) {
+                        btn.className = "nav-link px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-400 bg-indigo-500/10 border border-indigo-500/20";
+                    }
+                } else {
+                    el.classList.add('hidden');
+                    if (btn) {
+                        btn.className = "nav-link px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white hover:bg-slate-800/60";
+                    }
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Trigger canvas redraw when entering Bab 1 or Bab 2
+            if (viewId === 'bab1') {
+                setTimeout(() => { updateSenilaiSim(); updateBerbalikSim(); }, 50);
+            } else if (viewId === 'bab2') {
+                setTimeout(() => { updateFunctionMachine(); }, 50);
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // BAB 1 TAB SWITCHER
+        function switchBab1Tab(tab) {
+            playSound('click');
+            ['senilai', 'berbalik', 'skala'].forEach(t => {
+                const sub = document.getElementById(`subtab-${t}`);
+                const btn = document.getElementById(`tab-b1-${t}`);
+                if (t === tab) {
+                    sub.classList.remove('hidden');
+                    btn.className = t === 'skala' ? 
+                        "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow-md" :
+                        "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-sky-500 text-slate-950 shadow-md";
+                } else {
+                    sub.classList.add('hidden');
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+                }
+            });
+
+            if (tab === 'senilai') updateSenilaiSim();
+            if (tab === 'berbalik') updateBerbalikSim();
+        }
+
+        // 1. Senilai Simulator Logic
+        function updateSenilaiSim() {
+            const caseType = document.getElementById('senilai-case').value;
+            const x1 = parseFloat(document.getElementById('senilai-x1').value) || 1;
+            const y1 = parseFloat(document.getElementById('senilai-y1').value) || 1;
+            const x2 = parseFloat(document.getElementById('senilai-slider-x2').value) || 1;
+
+            document.getElementById('senilai-val-x2').innerText = x2;
+
+            // Labels update based on case
+            if (caseType === 'bensin') {
+                document.getElementById('senilai-label-x1').innerText = "Bensin Awal (Liter)";
+                document.getElementById('senilai-label-y1').innerText = "Jarak Awal (km)";
+                document.getElementById('senilai-label-x2').innerText = "Bensin Target (Liter)";
+            } else if (caseType === 'pulpen') {
+                document.getElementById('senilai-label-x1').innerText = "Banyak Barang (Pcs)";
+                document.getElementById('senilai-label-y1').innerText = "Total Harga (Rp)";
+                document.getElementById('senilai-label-x2').innerText = "Barang Target (Pcs)";
+            } else {
+                document.getElementById('senilai-label-x1').innerText = "Waktu Kerja (Hari)";
+                document.getElementById('senilai-label-y1').innerText = "Hasil Kerajinan";
+                document.getElementById('senilai-label-x2').innerText = "Waktu Target (Hari)";
+            }
+
+            const k = y1 / x1;
+            const y2 = k * x2;
+
+            document.getElementById('senilai-result-y2').innerText = caseType === 'pulpen' ? `Rp${y2.toLocaleString('id-ID')}` : `${y2.toFixed(1)}`;
+            document.getElementById('senilai-k-value').innerText = `Rasio (k = Y/X) = ${k.toFixed(2)}`;
+
+            // Canvas Plotting
+            drawSenilaiCanvas(x1, y1, x2, y2);
+        }
+
+        function drawSenilaiCanvas(x1, y1, x2, y2) {
+            const canvas = document.getElementById('canvas-senilai');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.parentElement.clientWidth;
+            const h = canvas.height = canvas.parentElement.clientHeight;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Grid lines
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            for(let x=0; x<w; x+=30) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+            for(let y=0; y<h; y+=30) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+
+            // Origin
+            const originX = 40;
+            const originY = h - 30;
+
+            // Scale factors
+            const maxX = Math.max(x1, x2, 20) * 1.2;
+            const maxY = Math.max(y1, y2, 100) * 1.2;
+
+            const scaleX = (w - 60) / maxX;
+            const scaleY = (h - 50) / maxY;
+
+            // Draw line through origin
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(originX, originY);
+            ctx.lineTo(originX + maxX * scaleX, originY - (maxX * (y1/x1)) * scaleY);
+            ctx.stroke();
+
+            // Point 1 (X1, Y1)
+            const p1x = originX + x1 * scaleX;
+            const p1y = originY - y1 * scaleY;
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath(); ctx.arc(p1x, p1y, 6, 0, Math.PI*2); ctx.fill();
+
+            // Point 2 (X2, Y2)
+            const p2x = originX + x2 * scaleX;
+            const p2y = originY - y2 * scaleY;
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath(); ctx.arc(p2x, p2y, 8, 0, Math.PI*2); ctx.fill();
+
+            // Labels
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '10px monospace';
+            ctx.fillText(`(X1:${x1}, Y1:${y1})`, p1x + 10, p1y - 5);
+            ctx.fillText(`TARGET (X2:${x2}, Y2:${y2.toFixed(1)})`, p2x + 10, p2y - 5);
+        }
+
+        // 2. Berbalik Nilai Simulator Logic
+        function updateBerbalikSim() {
+            const x1 = parseFloat(document.getElementById('berbalik-x1').value) || 1;
+            const y1 = parseFloat(document.getElementById('berbalik-y1').value) || 1;
+            const y2 = parseFloat(document.getElementById('berbalik-slider-y2').value) || 1;
+
+            document.getElementById('berbalik-val-y2').innerText = y2;
+
+            const k = x1 * y1;
+            const x2 = k / y2;
+
+            document.getElementById('berbalik-result-x2').innerText = `${Math.ceil(x2)} Orang`;
+            document.getElementById('berbalik-k-value').innerText = `Beban Kerja Total (k = X × Y) = ${k}`;
+
+            drawBerbalikCanvas(x1, y1, x2, y2, k);
+        }
+
+        function drawBerbalikCanvas(x1, y1, x2, y2, k) {
+            const canvas = document.getElementById('canvas-berbalik');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.parentElement.clientWidth;
+            const h = canvas.height = canvas.parentElement.clientHeight;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Grid lines
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            for(let x=0; x<w; x+=30) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+            for(let y=0; y<h; y+=30) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+
+            const originX = 40;
+            const originY = h - 30;
+
+            const maxX = Math.max(x1, x2, 40) * 1.2;
+            const maxY = Math.max(y1, y2, 40) * 1.2;
+
+            const scaleX = (w - 60) / maxX;
+            const scaleY = (h - 50) / maxY;
+
+            // Draw Hyperbola Curve y = k / x
+            ctx.strokeStyle = '#c084fc';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            let started = false;
+            for (let px = 1; px <= maxX; px += 0.5) {
+                const py = k / px;
+                const canvasPx = originX + px * scaleX;
+                const canvasPy = originY - py * scaleY;
+
+                if (canvasPy >= 10 && canvasPy <= h) {
+                    if (!started) { ctx.moveTo(canvasPx, canvasPy); started = true; }
+                    else { ctx.lineTo(canvasPx, canvasPy); }
+                }
+            }
+            ctx.stroke();
+
+            // Point 1
+            const p1x = originX + x1 * scaleX;
+            const p1y = originY - y1 * scaleY;
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath(); ctx.arc(p1x, p1y, 6, 0, Math.PI*2); ctx.fill();
+
+            // Point 2
+            const p2x = originX + x2 * scaleX;
+            const p2y = originY - y2 * scaleY;
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath(); ctx.arc(p2x, p2y, 8, 0, Math.PI*2); ctx.fill();
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '10px monospace';
+            ctx.fillText(`Awal (${x1} org, ${y1} hr)`, p1x + 8, p1y - 5);
+            ctx.fillText(`Target (${x2.toFixed(1)} org, ${y2} hr)`, p2x + 8, p2y - 5);
+        }
+
+        // 3. Pyramid Scale Game Logic
+        let currentPyramidTarget = 'JP'; // 'JP', 'S', or 'JB'
+        let currentQuestionAnswer = 8;
+        let gameScore = 0;
+        let gameStreak = 0;
+
+        function selectPyramidTarget(target) {
+            playSound('click');
+            currentPyramidTarget = target;
+
+            ['pyr-jp', 'pyr-s', 'pyr-jb'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
+
+            const activeEl = document.getElementById(`pyr-${target.toLowerCase()}`);
+            if (activeEl) activeEl.classList.add('active');
+
+            const formulaText = document.getElementById('skala-formula-text');
+            if (target === 'JP') {
+                formulaText.innerHTML = "$$\\text{JP} = \\text{S} \\times \\text{JB}$$";
+            } else if (target === 'S') {
+                formulaText.innerHTML = "$$\\text{Skala (S)} = \\frac{\\text{JP}}{\\text{JB}}$$";
+            } else {
+                formulaText.innerHTML = "$$\\text{JB} = \\frac{\\text{JP}}{\\text{Skala (S)}}$$";
+            }
+
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('skala-formula-box'));
+            }
+
+            generateSkalaQuestion();
+        }
+
+        function generateSkalaQuestion() {
+            const targetBadge = document.getElementById('skala-target-badge');
+            const questionText = document.getElementById('skala-question-text');
+            const label1 = document.getElementById('label-param-1');
+            const label2 = document.getElementById('label-param-2');
+            const val1 = document.getElementById('val-param-1');
+            const val2 = document.getElementById('val-param-2');
+            const unitHint = document.getElementById('skala-unit-hint');
+
+            document.getElementById('skala-feedback-box').classList.add('hidden');
+            document.getElementById('user-skala-input').value = '';
+
+            if (currentPyramidTarget === 'JP') {
+                targetBadge.innerText = "Mencari: JP (Jarak pada Peta)";
+                unitHint.innerText = "Satuan Hasil: cm";
+                label1.innerText = "Skala (1 : N)";
+                label2.innerText = "Jarak Sebenarnya (JB - km)";
+
+                const skalaArr = [1000000, 1200000, 1500000, 2000000];
+                const jbArr = [60, 96, 90, 120];
+
+                const s = skalaArr[Math.floor(Math.random() * skalaArr.length)];
+                const jb = jbArr[Math.floor(Math.random() * jbArr.length)];
+
+                val1.value = s;
+                val2.value = jb;
+
+                currentQuestionAnswer = (jb * 100000) / s;
+                questionText.innerHTML = `Peta berskala <strong>1 : ${s.toLocaleString('id-ID')}</strong>. Jika jarak sebenarnya dua kota adalah <strong>${jb} km</strong>, berapakah jarak pada peta (JP)?`;
+            
+            } else if (currentPyramidTarget === 'S') {
+                targetBadge.innerText = "Mencari: Skala (S)";
+                unitHint.innerText = "Hasil berupa N (1 : N)";
+                label1.innerText = "Jarak Peta (JP - cm)";
+                label2.innerText = "Jarak Sebenarnya (JB - km)";
+
+                const jp = 4.8;
+                const jb = 72;
+
+                val1.value = jp;
+                val2.value = jb;
+
+                currentQuestionAnswer = (jb * 100000) / jp;
+                questionText.innerHTML = `Jarak sebenarnya antara dua desa adalah <strong>${jb} km</strong>. Jika jarak pada peta <strong>${jp} cm</strong>, berapakah nilai pembanding skala peta (1 : N)?`;
+            
+            } else {
+                targetBadge.innerText = "Mencari: JB (Jarak Sebenarnya)";
+                unitHint.innerText = "Satuan Hasil: km";
+                label1.innerText = "Jarak Peta (JP - cm)";
+                label2.innerText = "Skala (1 : N)";
+
+                const jp = 6;
+                const s = 1500000;
+
+                val1.value = jp;
+                val2.value = s;
+
+                currentQuestionAnswer = (jp * s) / 100000;
+                questionText.innerHTML = `Pada peta skala <strong>1 : ${s.toLocaleString('id-ID')}</strong>, jarak kota A dan B adalah <strong>${jp} cm</strong>. Berapakah jarak sebenarnya (JB) dalam km?`;
+            }
+        }
+
+        function calculateSkalaLive() {
+            // Live calculation updates based on manual inputs
+            const v1 = parseFloat(document.getElementById('val-param-1').value) || 1;
+            const v2 = parseFloat(document.getElementById('val-param-2').value) || 1;
+
+            if (currentPyramidTarget === 'JP') {
+                currentQuestionAnswer = (v2 * 100000) / v1;
+            } else if (currentPyramidTarget === 'S') {
+                currentQuestionAnswer = (v2 * 100000) / v1;
+            } else {
+                currentQuestionAnswer = (v1 * v2) / 100000;
+            }
+        }
+
+        function checkSkalaAnswer() {
+            const userInput = parseFloat(document.getElementById('user-skala-input').value);
+            const feedbackBox = document.getElementById('skala-feedback-box');
+            feedbackBox.classList.remove('hidden');
+
+            if (Math.abs(userInput - currentQuestionAnswer) < 0.1) {
+                playSound('success');
+                gameScore += 10;
+                gameStreak += 1;
+                document.getElementById('skala-game-score').innerText = gameScore;
+                document.getElementById('skala-game-streak').innerText = `${gameStreak} 🔥`;
+
+                feedbackBox.className = "p-3.5 rounded-xl text-xs font-bold text-center bg-emerald-500/20 border border-emerald-500/40 text-emerald-300";
+                feedbackBox.innerHTML = `<i class="fa-solid fa-circle-check text-lg mr-1.5"></i> JAWABAN BENAR! (+10 Skor). Rumus terbukti tepat!`;
+            } else {
+                gameStreak = 0;
+                document.getElementById('skala-game-streak').innerText = `0 🔥`;
+
+                feedbackBox.className = "p-3.5 rounded-xl text-xs font-bold text-center bg-rose-500/20 border border-rose-500/40 text-rose-300";
+                feedbackBox.innerHTML = `<i class="fa-solid fa-circle-xmark text-lg mr-1.5"></i> Jawaban kurang tepat. Hasil yang benar: <strong>${currentQuestionAnswer.toLocaleString('id-ID')}</strong>`;
+            }
+        }
+
+        // BAB 2 TAB SWITCHER
+        function switchBab2Tab(tab) {
+            playSound('click');
+            ['konsep', 'mesin', 'sandi'].forEach(t => {
+                const sub = document.getElementById(`subtab-${t}`);
+                const btn = document.getElementById(`tab-b2-${t}`);
+                if (t === tab) {
+                    sub.classList.remove('hidden');
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-purple-600 text-white shadow-md";
+                } else {
+                    sub.classList.add('hidden');
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+                }
+            });
+
+            if (tab === 'mesin') updateFunctionMachine();
+            if (tab === 'sandi') renderAlphabetGrid();
+        }
+
+        // 1. Mapping Calculator Logic
+        function updateMappingCalculator() {
+            const na = parseInt(document.getElementById('input-na').value) || 1;
+            const nb = parseInt(document.getElementById('input-nb').value) || 1;
+
+            document.getElementById('val-na-display').innerText = na;
+            document.getElementById('val-nb-display').innerText = nb;
+
+            // Pemetaan A to B = n(B)^n(A)
+            const pemetaanAB = Math.pow(nb, na);
+            document.getElementById('calc-pemetaan-a-b').innerText = `${nb}^${na} = ${pemetaanAB.toLocaleString('id-ID')}`;
+
+            // Pemetaan B to A = n(A)^n(B)
+            const pemetaanBA = Math.pow(na, nb);
+            document.getElementById('calc-pemetaan-b-a').innerText = `${na}^${nb} = ${pemetaanBA.toLocaleString('id-ID')}`;
+
+            // Korespondensi 1-1
+            const badge = document.getElementById('kor-status-badge');
+            const korBox = document.getElementById('calc-korespondensi');
+
+            if (na === nb) {
+                badge.className = "text-[10px] px-2 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-300";
+                badge.innerText = `Syarat Terpenuhi (n(A) = n(B) = ${na})`;
+
+                let factorial = 1;
+                for(let i=1; i<=na; i++) factorial *= i;
+
+                korBox.innerText = `${na}! = ${factorial} Pasangan`;
+            } else {
+                badge.className = "text-[10px] px-2 py-0.5 rounded font-bold bg-rose-500/20 text-rose-300";
+                badge.innerText = `Tidak Memenuhi (n(A) ≠ n(B))`;
+                korBox.innerText = `0 (Tidak Ada Korespondensi 1-1)`;
+            }
+        }
+
+        // 2. Function Machine Logic f(x) = ax + b
+        function updateFunctionMachine() {
+            const a = parseFloat(document.getElementById('func-param-a').value) || 0;
+            const b = parseFloat(document.getElementById('func-param-b').value) || 0;
+            const x = parseFloat(document.getElementById('func-input-x').value) || 0;
+
+            document.getElementById('func-x-display').innerText = x;
+            document.getElementById('tbl-current-x').innerText = x;
+
+            const bSign = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+            document.getElementById('func-equation-title').innerText = `f(x) = ${a}x ${bSign}`;
+
+            const y = a * x + b;
+            document.getElementById('func-result-y').innerText = y;
+            document.getElementById('func-equation-display').innerText = `f(${x}) = ${a}(${x}) ${bSign} = ${y}`;
+            document.getElementById('tbl-current-y').innerText = y;
+
+            // Fill Table
+            [-2, -1, 0, 1, 2].forEach(val => {
+                const idSuffix = val < 0 ? `m${Math.abs(val)}` : `${val}`;
+                const res = a * val + b;
+                const cell = document.getElementById(`tbl-y-${idSuffix}`);
+                if (cell) cell.innerText = res;
+            });
+
+            drawFunctionCanvas(a, b, x, y);
+        }
+
+        function drawFunctionCanvas(a, b, targetX, targetY) {
+            const canvas = document.getElementById('canvas-function');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.parentElement.clientWidth;
+            const h = canvas.height = canvas.parentElement.clientHeight;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const originX = w / 2;
+            const originY = h / 2;
+            const scale = 15;
+
+            // Axes
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, originY); ctx.lineTo(w, originY);
+            ctx.moveTo(originX, 0); ctx.lineTo(originX, h);
+            ctx.stroke();
+
+            // Line f(x)
+            ctx.strokeStyle = '#c084fc';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            const xStart = -20;
+            const yStart = a * xStart + b;
+            const xEnd = 20;
+            const yEnd = a * xEnd + b;
+
+            ctx.moveTo(originX + xStart * scale, originY - yStart * scale);
+            ctx.lineTo(originX + xEnd * scale, originY - yEnd * scale);
+            ctx.stroke();
+
+            // Target Point
+            const ptX = originX + targetX * scale;
+            const ptY = originY - targetY * scale;
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath(); ctx.arc(ptX, ptY, 7, 0, Math.PI*2); ctx.fill();
+        }
+
+        // 3. Sandi Angka Cryptography Logic
+        function renderAlphabetGrid() {
+            const grid = document.getElementById('alphabet-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            for(let i=1; i<=26; i++) {
+                const letter = String.fromCharCode(64 + i);
+                const item = document.createElement('div');
+                item.className = "bg-slate-900 border border-slate-800 p-1.5 rounded-lg flex flex-col items-center";
+                item.innerHTML = `<span class="font-bold text-indigo-300">${letter}</span><span class="text-[9px] text-slate-500">${i}</span>`;
+                grid.appendChild(item);
+            }
+        }
+
+        function encodeCipher() {
+            const text = document.getElementById('cipher-input-text').value.toUpperCase();
+            const resultCode = document.getElementById('cipher-result-code');
+
+            const codes = [];
+            for(let i=0; i<text.length; i++) {
+                const code = text.charCodeAt(i);
+                if (code >= 65 && code <= 90) {
+                    codes.push(code - 64);
+                }
+            }
+
+            resultCode.innerText = codes.length > 0 ? codes.join('-') : '-';
+        }
+
+        function decodeCipher() {
+            const codeInput = document.getElementById('cipher-input-code').value;
+            const resultText = document.getElementById('cipher-result-text');
+
+            const parts = codeInput.split('-');
+            let word = '';
+
+            parts.forEach(p => {
+                const num = parseInt(p.trim());
+                if (!isNaN(num) && num >= 1 && num <= 26) {
+                    word += String.fromCharCode(64 + num);
+                }
+            });
+
+            resultText.innerText = word || '-';
+        }
+
+        // On Page Load Initialization
+        window.onload = function() {
+            renderAlphabetGrid();
+            selectPyramidTarget('JP');
+            updateMappingCalculator();
+
+            // Render LaTeX Math Formulas
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        };
+
+        // Window resize handler for canvas responsiveness
+        window.onresize = function() {
+            updateSenilaiSim();
+            updateBerbalikSim();
+            updateFunctionMachine();
+        };
+    </script>
+</body>
+</html>
